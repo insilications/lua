@@ -1,0 +1,2 @@
+mkdir -p %{_buildroot}/usr/lib64/pkgconfig
+make pc INSTALL_TOP=/usr > %{_buildroot}/usr/lib64/pkgconfig/lua.pc
