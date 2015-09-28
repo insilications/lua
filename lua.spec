@@ -4,7 +4,7 @@
 #
 Name     : lua
 Version  : 5.3.1
-Release  : 15
+Release  : 16
 URL      : http://www.lua.org/ftp/lua-5.3.1.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.3.1.tar.gz
 Summary  : No detailed summary available
