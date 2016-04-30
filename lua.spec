@@ -4,7 +4,7 @@
 #
 Name     : lua
 Version  : 5.3.2
-Release  : 18
+Release  : 19
 URL      : http://www.lua.org/ftp/lua-5.3.2.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.3.2.tar.gz
 Summary  : No detailed summary available
