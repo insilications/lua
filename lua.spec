@@ -4,7 +4,7 @@
 #
 Name     : lua
 Version  : 5.3.3
-Release  : 21
+Release  : 22
 URL      : http://www.lua.org/ftp/lua-5.3.3.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.3.3.tar.gz
 Summary  : No detailed summary available
@@ -43,6 +43,7 @@ dev components for the lua package.
 %patch1 -p1
 
 %build
+export LANG=C
 make V=1  %{?_smp_mflags} linux
 
 %check
