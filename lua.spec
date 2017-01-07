@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : lua
 Version  : 5.3.3
-Release  : 27
+Release  : 28
 URL      : http://www.lua.org/ftp/lua-5.3.3.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.3.3.tar.gz
 Summary  : No detailed summary available
@@ -58,8 +58,8 @@ make test
 rm -rf %{buildroot}
 %make_install INSTALL_TOP=%{buildroot}/usr/
 ## make_install_append content
-mkdir -p %{_buildroot}/usr/lib64/pkgconfig
-make pc INSTALL_TOP=/usr > %{_buildroot}/usr/lib64/pkgconfig/lua.pc
+mkdir -p %{buildroot}/usr/lib64/pkgconfig
+make pc INSTALL_TOP=/usr > %{buildroot}/usr/lib64/pkgconfig/lua.pc
 ## make_install_append end
 
 %files
@@ -77,3 +77,4 @@ make pc INSTALL_TOP=/usr > %{_buildroot}/usr/lib64/pkgconfig/lua.pc
 /usr/include/*.h
 /usr/include/*.hpp
 /usr/lib/*.a
+/usr/lib64/pkgconfig/lua.pc
