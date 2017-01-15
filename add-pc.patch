@@ -10,5 +10,5 @@
 +Name: Lua
 +Description: An Extensible Extension Language
 +Requires:
-+Libs: -llua 
++Libs: -llua  -lm
 +Cflags: -I${includedir}
