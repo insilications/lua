@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : lua
 Version  : 5.3.3
-Release  : 30
+Release  : 31
 URL      : http://www.lua.org/ftp/lua-5.3.3.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.3.3.tar.gz
 Summary  : No detailed summary available
