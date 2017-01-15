@@ -1,0 +1,13 @@
+--- /dev/null	2016-11-16 17:30:52.978988761 +0000
++++ lua-5.3.3/lua.pc	2017-01-15 01:04:09.852470251 +0000
+@@ -0,0 +1,10 @@
++prefix= /usr
++exec_prefix=${prefix}
++libdir= /usr/lib64
++includedir=${prefix}/include
++
++Name: Lua
++Description: An Extensible Extension Language
++Requires:
++Libs: -llua 
++Cflags: -I${includedir}
