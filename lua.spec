@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : lua
 Version  : 5.3.4
-Release  : 35
+Release  : 36
 URL      : http://www.lua.org/ftp/lua-5.3.4.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.3.4.tar.gz
 Summary  : No detailed summary available
@@ -14,8 +14,8 @@ License  : MIT
 Requires: lua-bin
 BuildRequires : ncurses-dev
 BuildRequires : readline-dev
-Patch1: build.patch
-Patch2: add-pc.patch
+Patch1: 0001-Build-fixes.patch
+Patch2: 0002-Add-lua.pc.patch
 
 %description
 This is Lua 5.3.4, released on 12 Jan 2017.
@@ -47,7 +47,7 @@ dev components for the lua package.
 
 %build
 export LANG=C
-export SOURCE_DATE_EPOCH=1486257669
+export SOURCE_DATE_EPOCH=1487022997
 make V=1  %{?_smp_mflags} linux
 
 %check
@@ -58,7 +58,7 @@ export no_proxy=localhost
 make test
 
 %install
-export SOURCE_DATE_EPOCH=1486257669
+export SOURCE_DATE_EPOCH=1487022997
 rm -rf %{buildroot}
 %make_install INSTALL_TOP=%{buildroot}/usr/
 ## make_install_append content
@@ -80,5 +80,5 @@ cp lua.pc %{buildroot}/usr/lib64/pkgconfig/lua.pc
 %defattr(-,root,root,-)
 /usr/include/*.h
 /usr/include/*.hpp
-/usr/lib/*.a
+/usr/lib64/*.a
 /usr/lib64/pkgconfig/lua.pc
