@@ -1,2 +1,2 @@
-build.patch
-add-pc.patch
+0001-Build-fixes.patch
+0002-Add-lua.pc.patch

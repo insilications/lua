@@ -1,0 +1,30 @@
+From 0f1d48a8545e16b3e26ea1dc9115cf9466f215ec Mon Sep 17 00:00:00 2001
+From: Auke Kok <auke-jan.h.kok@intel.com>
+Date: Mon, 13 Feb 2017 13:42:34 -0800
+Subject: [PATCH lua 2/2] Add lua.pc
+
+---
+ lua.pc | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ create mode 100644 lua.pc
+
+diff --git a/lua.pc b/lua.pc
+new file mode 100644
+index 0000000..3171ea3
+--- /dev/null
++++ b/lua.pc
+@@ -0,0 +1,11 @@
++prefix= /usr
++exec_prefix=${prefix}
++libdir= /usr/lib64
++includedir=${prefix}/include
++
++Version: 5.3.3
++Name: Lua
++Description: An Extensible Extension Language
++Requires:
++Libs: -llua  -lm
++Cflags: -I${includedir}
+-- 
+2.11.1
+
