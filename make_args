@@ -1,2 +1,2 @@
-linux
+linux MYCFLAGS="${CFLAGS} -fpic" MYLIBS="-lncurses -lm"
 

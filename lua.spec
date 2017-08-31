@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : lua
 Version  : 5.3.4
-Release  : 37
+Release  : 38
 URL      : http://www.lua.org/ftp/lua-5.3.4.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.3.4.tar.gz
 Summary  : No detailed summary available
@@ -46,19 +46,22 @@ dev components for the lua package.
 %patch2 -p1
 
 %build
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1487022997
-make V=1  %{?_smp_mflags} linux
+export SOURCE_DATE_EPOCH=1504160941
+make V=1  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS} -fpic" MYLIBS="-lncurses -lm"
 
 %check
 export LANG=C
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
-export no_proxy=localhost
+export no_proxy=localhost,127.0.0.1,0.0.0.0
 make test
 
 %install
-export SOURCE_DATE_EPOCH=1487022997
+export SOURCE_DATE_EPOCH=1504160941
 rm -rf %{buildroot}
 %make_install INSTALL_TOP=%{buildroot}/usr/
 ## make_install_append content
