@@ -1,5 +1,5 @@
 PKG_NAME := lua
-URL := http://www.lua.org/ftp/lua-5.3.4.tar.gz
-
+URL = http://www.lua.org/ftp/lua-5.3.4.tar.gz
+ARCHIVES = 
 
 include ../common/Makefile.common

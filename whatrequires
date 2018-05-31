@@ -1,5 +1,10 @@
 # This file contains recursive sources that require this package
 audit
 comedilib
+flatpak
+gmime
 gpgme
+hamlib
+notmuch
 swig
+volume_key
