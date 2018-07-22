@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : lua
-Version  : 5.3.4
-Release  : 44
-URL      : http://www.lua.org/ftp/lua-5.3.4.tar.gz
-Source0  : http://www.lua.org/ftp/lua-5.3.4.tar.gz
+Version  : 5.3.5
+Release  : 45
+URL      : http://www.lua.org/ftp/lua-5.3.5.tar.gz
+Source0  : http://www.lua.org/ftp/lua-5.3.5.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : MIT
@@ -18,7 +18,7 @@ Patch1: 0001-Build-fixes.patch
 Patch2: 0002-Add-lua.pc.patch
 
 %description
-This is Lua 5.3.4, released on 12 Jan 2017.
+This is Lua 5.3.5, released on 26 Jun 2018.
 For installation instructions, license details, and
 further information about Lua, see doc/readme.html.
 
@@ -41,7 +41,7 @@ dev components for the lua package.
 
 
 %prep
-%setup -q -n lua-5.3.4
+%setup -q -n lua-5.3.5
 %patch1 -p1
 %patch2 -p1
 
@@ -50,7 +50,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1527741897
+export SOURCE_DATE_EPOCH=1532271930
 make  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS} -fpic" MYLIBS="-lncurses -lm"
 
 %check
@@ -61,7 +61,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make test
 
 %install
-export SOURCE_DATE_EPOCH=1527741897
+export SOURCE_DATE_EPOCH=1532271930
 rm -rf %{buildroot}
 %make_install INSTALL_TOP=%{buildroot}/usr/
 ## make_install_append content
