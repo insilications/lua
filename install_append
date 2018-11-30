@@ -1,2 +1,4 @@
 mkdir -p %{buildroot}/usr/lib64/pkgconfig
 cp lua.pc %{buildroot}/usr/lib64/pkgconfig/lua.pc
+mkdir -p %{buildroot}/usr/share
+mv %{buildroot}/usr/man %{buildroot}/usr/share/
