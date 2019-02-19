@@ -5,19 +5,20 @@
 %define keepstatic 1
 Name     : lua
 Version  : 5.3.5
-Release  : 49
+Release  : 50
 URL      : http://www.lua.org/ftp/lua-5.3.5.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.3.5.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : MIT
 Requires: lua-bin = %{version}-%{release}
+Requires: lua-lib = %{version}-%{release}
 Requires: lua-man = %{version}-%{release}
 BuildRequires : ncurses-dev
 BuildRequires : readline-dev
 Patch1: 0001-Build-fixes.patch
-Patch2: 0002-Add-lua.pc.patch
-Patch3: CVE-2019-6706.patch
+Patch2: CVE-2019-6706.patch
+Patch3: fix_pc_for_5.3.5.patch
 
 %description
 This is Lua 5.3.5, released on 26 Jun 2018.
@@ -36,11 +37,20 @@ bin components for the lua package.
 %package dev
 Summary: dev components for the lua package.
 Group: Development
+Requires: lua-lib = %{version}-%{release}
 Requires: lua-bin = %{version}-%{release}
 Provides: lua-devel = %{version}-%{release}
 
 %description dev
 dev components for the lua package.
+
+
+%package lib
+Summary: lib components for the lua package.
+Group: Libraries
+
+%description lib
+lib components for the lua package.
 
 
 %package man
@@ -62,7 +72,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1548286912
+export SOURCE_DATE_EPOCH=1550615361
 export CFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
@@ -78,15 +88,9 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make test
 
 %install
-export SOURCE_DATE_EPOCH=1548286912
+export SOURCE_DATE_EPOCH=1550615361
 rm -rf %{buildroot}
 %make_install INSTALL_TOP=%{buildroot}/usr/
-## install_append content
-mkdir -p %{buildroot}/usr/lib64/pkgconfig
-cp lua.pc %{buildroot}/usr/lib64/pkgconfig/lua.pc
-mkdir -p %{buildroot}/usr/share
-mv %{buildroot}/usr/man %{buildroot}/usr/share/
-## install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -101,7 +105,13 @@ mv %{buildroot}/usr/man %{buildroot}/usr/share/
 /usr/include/*.h
 /usr/include/*.hpp
 /usr/lib64/*.a
+/usr/lib64/liblua.so
 /usr/lib64/pkgconfig/lua.pc
+
+%files lib
+%defattr(-,root,root,-)
+/usr/lib64/liblua.so.5.3
+/usr/lib64/liblua.so.5.3.5
 
 %files man
 %defattr(0644,root,root,0755)
