@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : lua
 Version  : 5.3.5
-Release  : 50
+Release  : 51
 URL      : http://www.lua.org/ftp/lua-5.3.5.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.3.5.tar.gz
 Summary  : No detailed summary available
@@ -72,12 +72,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1550615361
+export SOURCE_DATE_EPOCH=1550617366
 export CFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
 export CXXFLAGS="$CXXFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
-make  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS} -fpic" MYLIBS="-lncurses -lm"
+make  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLIBS="-lncurses -lm"
 
 
 %check
@@ -88,7 +88,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make test
 
 %install
-export SOURCE_DATE_EPOCH=1550615361
+export SOURCE_DATE_EPOCH=1550617366
 rm -rf %{buildroot}
 %make_install INSTALL_TOP=%{buildroot}/usr/
 

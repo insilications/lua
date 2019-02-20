@@ -26,11 +26,13 @@ liblua.so.5.3:luaL_loadfilex
 liblua.so.5.3:luaL_loadstring
 liblua.so.5.3:luaL_newmetatable
 liblua.so.5.3:luaL_newstate
+liblua.so.5.3:luaL_openlib
 liblua.so.5.3:luaL_openlibs
 liblua.so.5.3:luaL_optinteger
 liblua.so.5.3:luaL_optlstring
 liblua.so.5.3:luaL_optnumber
 liblua.so.5.3:luaL_prepbuffsize
+liblua.so.5.3:luaL_pushmodule
 liblua.so.5.3:luaL_pushresult
 liblua.so.5.3:luaL_pushresultsize
 liblua.so.5.3:luaL_ref
