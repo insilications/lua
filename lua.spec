@@ -19,6 +19,8 @@ BuildRequires : readline-dev
 Patch1: 0001-Build-fixes.patch
 Patch2: CVE-2019-6706.patch
 Patch3: fix_pc_for_5.3.5.patch
+Patch4: 0001-Add-scimark-as-PGO-profiling-workload.patch
+Patch5: 0001-Add-option-for-pgo-profiling-test-with-scimark.patch
 
 %description
 This is Lua 5.3.5, released on 26 Jun 2018.
@@ -66,6 +68,8 @@ man components for the lua package.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
@@ -77,7 +81,18 @@ export CFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
 export CXXFLAGS="$CXXFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
-make  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLIBS="-lncurses -lm"
+
+export CFLAGS_GEN="$CFLAGS -fprofile-generate -fprofile-dir=/var/tmp/pgo "
+export LDFLAGS_GEN="$LDFLAGS -fprofile-generate -fprofile-dir=/var/tmp/pgo "
+export CFLAGS_USE="$CFLAGS -fprofile-use -fprofile-dir=/var/tmp/pgo -fprofile-correction "
+export LDFLAGS_USE="$LDFLAGS -fprofile-use -fprofile-dir=/var/tmp/pgo -fprofile-correction "
+
+make  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS_GEN} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${LDFLAGS_GEN}" MYLIBS="-lncurses -lm"
+
+make test_pgo
+
+make clean
+make  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS_USE} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${LDFLAGS_USE}" MYLIBS="-lncurses -lm"
 
 
 %check
