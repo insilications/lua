@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : lua
 Version  : 5.3.5
-Release  : 57
+Release  : 58
 URL      : http://www.lua.org/ftp/lua-5.3.5.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.3.5.tar.gz
 Summary  : No detailed summary available
@@ -30,7 +30,6 @@ further information about Lua, see doc/readme.html.
 %package bin
 Summary: bin components for the lua package.
 Group: Binaries
-Requires: lua-man = %{version}-%{release}
 
 %description bin
 bin components for the lua package.
@@ -42,6 +41,7 @@ Group: Development
 Requires: lua-lib = %{version}-%{release}
 Requires: lua-bin = %{version}-%{release}
 Provides: lua-devel = %{version}-%{release}
+Requires: lua = %{version}-%{release}
 
 %description dev
 dev components for the lua package.
@@ -63,6 +63,15 @@ Group: Default
 man components for the lua package.
 
 
+%package staticdev
+Summary: staticdev components for the lua package.
+Group: Default
+Requires: lua-dev = %{version}-%{release}
+
+%description staticdev
+staticdev components for the lua package.
+
+
 %prep
 %setup -q -n lua-5.3.5
 %patch1 -p1
@@ -75,35 +84,39 @@ man components for the lua package.
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1550617366
-export CFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
-export FCFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
-export FFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
-export CXXFLAGS="$CXXFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
-
-export CFLAGS_GEN="$CFLAGS -fprofile-generate -fprofile-dir=/var/tmp/pgo "
-export LDFLAGS_GEN="$LDFLAGS -fprofile-generate -fprofile-dir=/var/tmp/pgo "
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1568240106
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export FCFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export FFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export CXXFLAGS="$CXXFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export CFLAGS_GENERATE="$CFLAGS -fprofile-generate -fprofile-dir=/var/tmp/pgo -fprofile-update=atomic "
+export FCFLAGS_GENERATE="$FCFLAGS -fprofile-generate -fprofile-dir=/var/tmp/pgo -fprofile-update=atomic "
+export FFLAGS_GENERATE="$FFLAGS -fprofile-generate -fprofile-dir=/var/tmp/pgo -fprofile-update=atomic "
+export CXXFLAGS_GENERATE="$CXXFLAGS -fprofile-generate -fprofile-dir=/var/tmp/pgo -fprofile-update=atomic "
 export CFLAGS_USE="$CFLAGS -fprofile-use -fprofile-dir=/var/tmp/pgo -fprofile-correction "
-export LDFLAGS_USE="$LDFLAGS -fprofile-use -fprofile-dir=/var/tmp/pgo -fprofile-correction "
-
-make  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS_GEN} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${LDFLAGS_GEN}" MYLIBS="-lncurses -lm"
+export FCFLAGS_USE="$FCFLAGS -fprofile-use -fprofile-dir=/var/tmp/pgo -fprofile-correction "
+export FFLAGS_USE="$FFLAGS -fprofile-use -fprofile-dir=/var/tmp/pgo -fprofile-correction "
+export CXXFLAGS_USE="$CXXFLAGS -fprofile-use -fprofile-dir=/var/tmp/pgo -fprofile-correction "
+CFLAGS="${CFLAGS_GENERATE}" CXXFLAGS="${CXXFLAGS_GENERATE}" FFLAGS="${FFLAGS_GENERATE}" FCFLAGS="${FCFLAGS_GENERATE}"
+make  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${CFLAGS}" MYLIBS="-lncurses -lm"
 
 make test_pgo
-
 make clean
-make  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS_USE} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${LDFLAGS_USE}" MYLIBS="-lncurses -lm"
+CFLAGS="${CFLAGS_USE}" CXXFLAGS="${CXXFLAGS_USE}" FFLAGS="${FFLAGS_USE}" FCFLAGS="${FCFLAGS_USE}"
+make  %{?_smp_mflags} linux MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${CFLAGS}" MYLIBS="-lncurses -lm"
 
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make test
 
 %install
-export SOURCE_DATE_EPOCH=1550617366
+export SOURCE_DATE_EPOCH=1568240106
 rm -rf %{buildroot}
 %make_install INSTALL_TOP=%{buildroot}/usr/
 
@@ -117,9 +130,11 @@ rm -rf %{buildroot}
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/*.h
-/usr/include/*.hpp
-/usr/lib64/*.a
+/usr/include/lauxlib.h
+/usr/include/lua.h
+/usr/include/lua.hpp
+/usr/include/luaconf.h
+/usr/include/lualib.h
 /usr/lib64/liblua.so
 /usr/lib64/pkgconfig/lua.pc
 
@@ -132,3 +147,7 @@ rm -rf %{buildroot}
 %defattr(0644,root,root,0755)
 /usr/share/man/man1/lua.1
 /usr/share/man/man1/luac.1
+
+%files staticdev
+%defattr(-,root,root,-)
+/usr/lib64/liblua.a
