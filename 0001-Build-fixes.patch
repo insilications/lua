@@ -1,4 +1,4 @@
-From 61a34a5ca72b623208b32d4e877bc638c022254f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Auke Kok <auke-jan.h.kok@intel.com>
 Date: Mon, 13 Feb 2017 13:41:31 -0800
 Subject: [PATCH] Build fixes
@@ -12,7 +12,7 @@ Subject: [PATCH] Build fixes
  create mode 100644 src/lua.pc.in
 
 diff --git a/Makefile b/Makefile
-index 119110d..e8ffe65 100644
+index a2820e0..f49c4f7 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -10,13 +10,16 @@ PLAT= none
@@ -46,7 +46,7 @@ index 119110d..e8ffe65 100644
  
  # Lua version and release.
  V= 5.3
-@@ -51,24 +55,28 @@ R= $V.4
+@@ -51,24 +55,28 @@ R= $V.6
  # Targets start here.
  all:	$(PLAT)
  
@@ -97,7 +97,7 @@ index 119110d..e8ffe65 100644
  # list targets that do not create files (but not all makes understand .PHONY)
  .PHONY: all $(PLATS) clean test install local none dummy echo pecho lecho
 diff --git a/src/Makefile b/src/Makefile
-index 64c78f7..f4c2468 100644
+index a13afb9..e58a9cd 100644
 --- a/src/Makefile
 +++ b/src/Makefile
 @@ -29,6 +29,7 @@ MYOBJS=
@@ -157,6 +157,3 @@ index 9eeeea6..2a7deef 100644
  #define LUA_LDIR	LUA_ROOT "share/lua/" LUA_VDIR "/"
  #define LUA_CDIR	LUA_ROOT "lib/lua/" LUA_VDIR "/"
  #define LUA_PATH_DEFAULT  \
--- 
-2.20.1
-
