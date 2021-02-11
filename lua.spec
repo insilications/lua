@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : lua
-Version  : 5.3.6
-Release  : 61
-URL      : http://www.lua.org/ftp/lua-5.3.6.tar.gz
-Source0  : http://www.lua.org/ftp/lua-5.3.6.tar.gz
+Version  : 5.4.2
+Release  : 62
+URL      : http://www.lua.org/ftp/lua-5.4.2.tar.gz
+Source0  : http://www.lua.org/ftp/lua-5.4.2.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : MIT
@@ -21,7 +21,7 @@ Patch2: 0002-Add-scimark-as-PGO-profiling-workload.patch
 Patch3: 0003-Add-option-for-pgo-profiling-test-with-scimark.patch
 
 %description
-This is Lua 5.3.6, released on 14 Sep 2020.
+This is Lua 5.4.2, released on 13 Nov 2020.
 For installation instructions, license details, and
 further information about Lua, see doc/readme.html.
 
@@ -71,8 +71,8 @@ staticdev components for the lua package.
 
 
 %prep
-%setup -q -n lua-5.3.6
-cd %{_builddir}/lua-5.3.6
+%setup -q -n lua-5.4.2
+cd %{_builddir}/lua-5.4.2
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -82,7 +82,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1601523391
+export SOURCE_DATE_EPOCH=1613023129
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -O3 -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$FFLAGS -O3 -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
@@ -115,7 +115,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make test
 
 %install
-export SOURCE_DATE_EPOCH=1601523391
+export SOURCE_DATE_EPOCH=1613023129
 rm -rf %{buildroot}
 %make_install INSTALL_TOP=%{buildroot}/usr/
 
@@ -139,8 +139,8 @@ rm -rf %{buildroot}
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/liblua.so.5.3
-/usr/lib64/liblua.so.5.3.6
+/usr/lib64/liblua.so.5.4
+/usr/lib64/liblua.so.5.4.2
 
 %files man
 %defattr(0644,root,root,0755)

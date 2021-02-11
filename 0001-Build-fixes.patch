@@ -1,8 +1,12 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 313bd0948de28bc86673d5c7d6ad24e1645cc39d Mon Sep 17 00:00:00 2001
 From: Auke Kok <auke-jan.h.kok@intel.com>
-Date: Mon, 13 Feb 2017 13:41:31 -0800
+Date: Mon, 17 Sep 2001 00:00:00 -0700
 Subject: [PATCH] Build fixes
 
+---------------------------------
+Refactored 0001-Build-fixes.patch
+Signed-off-by: Karthik Prabhu Vinod <karthik.prabhu.vinod@intel.com>
+----------------------------------
 ---
  Makefile      | 30 +++++++++++++++++++-----------
  src/Makefile  |  6 +++++-
@@ -12,10 +16,10 @@ Subject: [PATCH] Build fixes
  create mode 100644 src/lua.pc.in
 
 diff --git a/Makefile b/Makefile
-index a2820e0..f49c4f7 100644
+index 36447a0..650456e 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -10,13 +10,16 @@ PLAT= none
+@@ -10,13 +10,16 @@ PLAT= guess
  # so take care if INSTALL_TOP is not an absolute path. See the local target.
  # You may want to make INSTALL_LMOD and INSTALL_CMOD consistent with
  # LUA_ROOT, LUA_LDIR, and LUA_CDIR in luaconf.h.
@@ -35,7 +39,7 @@ index a2820e0..f49c4f7 100644
  
  # How to install. If your install program does not support "-p", then
  # you may have to run ranlib on the installed liblua.a.
-@@ -41,8 +44,9 @@ PLATS= aix bsd c89 freebsd generic linux macosx mingw posix solaris
+@@ -41,8 +44,9 @@ PLATS= guess aix bsd c89 freebsd generic linux linux-readline macosx mingw posix
  # What to install.
  TO_BIN= lua luac
  TO_INC= lua.h luaconf.h lualib.h lauxlib.h lua.hpp
@@ -45,18 +49,15 @@ index a2820e0..f49c4f7 100644
 +TO_PC= lua.pc
  
  # Lua version and release.
- V= 5.3
-@@ -51,24 +55,28 @@ R= $V.6
+ V= 5.4
+@@ -51,21 +55,25 @@ R= $V.2
  # Targets start here.
  all:	$(PLAT)
  
--$(PLATS) clean:
--	cd src && $(MAKE) $@
-+$(PLATS) clean: pc
+-$(PLATS) help test clean:
+-	@cd src && $(MAKE) $@
++$(PLATS) help test clean: pc
 +	cd src && $(MAKE) $@ V=$(V) R=$(R)
- 
- test:	dummy
- 	src/lua -v
  
  install: dummy
 -	cd src && $(MKDIR) $(INSTALL_BIN) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_MAN) $(INSTALL_LMOD) $(INSTALL_CMOD)
@@ -78,13 +79,13 @@ index a2820e0..f49c4f7 100644
  
  local:
  	$(MAKE) install INSTALL_TOP=../install
-@@ -100,13 +108,13 @@ echo:
+@@ -92,13 +100,13 @@ echo:
  	@echo "INSTALL_CMOD= $(INSTALL_CMOD)"
  	@echo "INSTALL_EXEC= $(INSTALL_EXEC)"
  	@echo "INSTALL_DATA= $(INSTALL_DATA)"
 +	@echo "INSTALL_PC= $(INSTALL_PC)"
  
- # echo pkg-config data
+ # Echo pkg-config data.
  pc:
 -	@echo "version=$R"
 -	@echo "prefix=$(INSTALL_TOP)"
@@ -94,21 +95,21 @@ index a2820e0..f49c4f7 100644
 +	sed -i s%##INSTALL_LIB##%$(INSTALL_LIB)% src/$(TO_PC) && \
 +	sed -i s%##R##%$(R)% src/$(TO_PC)
  
- # list targets that do not create files (but not all makes understand .PHONY)
- .PHONY: all $(PLATS) clean test install local none dummy echo pecho lecho
+ # Targets that do not create files (not all makes understand .PHONY).
+ .PHONY: all $(PLATS) help test clean install uninstall local dummy echo pc
 diff --git a/src/Makefile b/src/Makefile
-index a13afb9..e58a9cd 100644
+index a99735a..26b44db 100644
 --- a/src/Makefile
 +++ b/src/Makefile
-@@ -29,6 +29,7 @@ MYOBJS=
- PLATS= aix bsd c89 freebsd generic linux macosx mingw posix solaris
+@@ -33,6 +33,7 @@ CMCFLAGS=
+ PLATS= guess aix bsd c89 freebsd generic linux linux-readline macosx mingw posix solaris
  
  LUA_A=	liblua.a
 +LUA_SO= liblua.so
- CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
- 	lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o \
- 	ltm.o lundump.o lvm.o lzio.o
-@@ -43,7 +44,7 @@ LUAC_T=	luac
+ CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o
+ LIB_O=	lauxlib.o lbaselib.o lcorolib.o ldblib.o liolib.o lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o linit.o
+ BASE_O= $(CORE_O) $(LIB_O) $(MYOBJS)
+@@ -44,7 +45,7 @@ LUAC_T=	luac
  LUAC_O=	luac.o
  
  ALL_O= $(BASE_O) $(LUA_O) $(LUAC_O)
@@ -117,7 +118,7 @@ index a13afb9..e58a9cd 100644
  ALL_A= $(LUA_A)
  
  # Targets start here.
-@@ -59,6 +60,9 @@ $(LUA_A): $(BASE_O)
+@@ -60,6 +61,9 @@ $(LUA_A): $(BASE_O)
  	$(AR) $@ $(BASE_O)
  	$(RANLIB) $@
  
@@ -145,10 +146,10 @@ index 0000000..2c9d8c0
 +Libs: -llua  -lm -ldl
 +Cflags: -I${includedir}
 diff --git a/src/luaconf.h b/src/luaconf.h
-index 9eeeea6..2a7deef 100644
+index d9cf18c..481d0f7 100644
 --- a/src/luaconf.h
 +++ b/src/luaconf.h
-@@ -200,7 +200,7 @@
+@@ -212,7 +212,7 @@
  
  #else			/* }{ */
  
@@ -156,4 +157,7 @@ index 9eeeea6..2a7deef 100644
 +#define LUA_ROOT	"/usr/"
  #define LUA_LDIR	LUA_ROOT "share/lua/" LUA_VDIR "/"
  #define LUA_CDIR	LUA_ROOT "lib/lua/" LUA_VDIR "/"
- #define LUA_PATH_DEFAULT  \
+ 
+-- 
+2.30.1
+
