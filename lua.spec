@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : lua
 Version  : 5.4.2
-Release  : 62
+Release  : 63
 URL      : http://www.lua.org/ftp/lua-5.4.2.tar.gz
 Source0  : http://www.lua.org/ftp/lua-5.4.2.tar.gz
 Summary  : No detailed summary available
@@ -82,7 +82,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1613023129
+export SOURCE_DATE_EPOCH=1613605795
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -O3 -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$FFLAGS -O3 -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
@@ -99,12 +99,12 @@ export FFLAGS_USE="$FFLAGS -fprofile-use -fprofile-dir=/var/tmp/pgo -fprofile-co
 export CXXFLAGS_USE="$CXXFLAGS -fprofile-use -fprofile-dir=/var/tmp/pgo -fprofile-correction "
 export LDFLAGS_USE="$LDFLAGS -fprofile-use -fprofile-dir=/var/tmp/pgo -fprofile-correction "
 CFLAGS="${CFLAGS_GENERATE}" CXXFLAGS="${CXXFLAGS_GENERATE}" FFLAGS="${FFLAGS_GENERATE}" FCFLAGS="${FCFLAGS_GENERATE}" LDFLAGS="${LDFLAGS_GENERATE}"
-make  %{?_smp_mflags}  linux MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${CFLAGS}" MYLIBS="-lncurses -lm"
+make  %{?_smp_mflags}  linux-readline MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${CFLAGS}" MYLIBS="-lncurses -lm"
 
 make test_pgo
 make clean
 CFLAGS="${CFLAGS_USE}" CXXFLAGS="${CXXFLAGS_USE}" FFLAGS="${FFLAGS_USE}" FCFLAGS="${FCFLAGS_USE}" LDFLAGS="${LDFLAGS_USE}"
-make  %{?_smp_mflags}  linux MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${CFLAGS}" MYLIBS="-lncurses -lm"
+make  %{?_smp_mflags}  linux-readline MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${CFLAGS}" MYLIBS="-lncurses -lm"
 
 
 %check
@@ -115,7 +115,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make test
 
 %install
-export SOURCE_DATE_EPOCH=1613023129
+export SOURCE_DATE_EPOCH=1613605795
 rm -rf %{buildroot}
 %make_install INSTALL_TOP=%{buildroot}/usr/
 
