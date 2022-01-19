@@ -5,12 +5,15 @@
 %define keepstatic 1
 Name     : lua
 Version  : 5.4.4
-Release  : 302
+Release  : 306
 URL      : file:///aot/build/clearlinux/packages/lua/lua-v5.4.4.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/lua/lua-v5.4.4.tar.gz
 Summary  : An Extensible Extension Language
 Group    : Development/Tools
 License  : MIT
+Requires: lua-bin = %{version}-%{release}
+Requires: lua-lib = %{version}-%{release}
+Requires: lua-man = %{version}-%{release}
 BuildRequires : Sphinx
 BuildRequires : autoconf
 BuildRequires : autogen
@@ -108,6 +111,51 @@ This is Lua 5.4.4, released on 13 Jan 2022.
 For installation instructions, license details, and
 further information about Lua, see doc/readme.html.
 
+%package bin
+Summary: bin components for the lua package.
+Group: Binaries
+
+%description bin
+bin components for the lua package.
+
+
+%package dev
+Summary: dev components for the lua package.
+Group: Development
+Requires: lua-lib = %{version}-%{release}
+Requires: lua-bin = %{version}-%{release}
+Provides: lua-devel = %{version}-%{release}
+Requires: lua = %{version}-%{release}
+
+%description dev
+dev components for the lua package.
+
+
+%package lib
+Summary: lib components for the lua package.
+Group: Libraries
+
+%description lib
+lib components for the lua package.
+
+
+%package man
+Summary: man components for the lua package.
+Group: Default
+
+%description man
+man components for the lua package.
+
+
+%package staticdev
+Summary: staticdev components for the lua package.
+Group: Default
+Requires: lua-dev = %{version}-%{release}
+
+%description staticdev
+staticdev components for the lua package.
+
+
 %prep
 %setup -q -n lua-clr
 cd %{_builddir}/lua-clr
@@ -118,7 +166,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1642584897
+export SOURCE_DATE_EPOCH=1642588320
 export GCC_IGNORE_WERROR=1
 ## altflags_pgo content
 ## pgo generate
@@ -201,11 +249,14 @@ export FCFLAGS="${FCFLAGS_GENERATE}"
 export LDFLAGS="${LDFLAGS_GENERATE}"
 export ASMFLAGS="${ASMFLAGS_GENERATE}"
 export LIBS="${LIBS_GENERATE}"
-make  %{?_smp_mflags}  linux-readline MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${CFLAGS}" MYLIBS="-lncurses -lm"  V=1 VERBOSE=1
+make  %{?_smp_mflags}  linux-readline MYCFLAGS="${CFLAGS} -fPIC -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1 -fno-strict-aliasing" MYLDFLAGS="${LDFLAGS} -fno-strict-aliasing" MYLIBS="-Wl,--whole-archive,--as-needed,--allow-multiple-definition,/usr/lib64/libncurses.a,/usr/lib64/libtinfow.a,-lpthread,-ldl,-lm,-lmvec,--no-whole-archive" VERBOSE=1  V=1 VERBOSE=1
 
 ## profile_payload start
 unset LD_LIBRARY_PATH
 unset LIBRARY_PATH
+pushd src/
+export LD_LIBRARY_PATH="$PWD:/usr/local/nvidia/lib64:/usr/local/nvidia/lib64/gbm:/usr/local/nvidia/lib64/vdpau:/usr/local/nvidia/lib64/xorg/modules/drivers:/usr/local/nvidia/lib64/xorg/modules/extensions:/usr/local/cuda/lib64:/usr/lib64/haswell:/usr/lib64/dri:/usr/lib64:/usr/lib:/aot/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/aot/intel/oneapi/compiler/latest/linux/lib:/aot/intel/oneapi/mkl/latest/lib/intel64:/aot/intel/oneapi/tbb/latest/lib/intel64/gcc4.8:/usr/share:/usr/lib64/wine:/usr/local/nvidia/lib32:/usr/local/nvidia/lib32/vdpau:/usr/lib32:/usr/lib32/wine"
+popd
 make test_pgo
 export LD_LIBRARY_PATH="/usr/local/nvidia/lib64:/usr/local/nvidia/lib64/gbm:/usr/local/nvidia/lib64/vdpau:/usr/local/nvidia/lib64/xorg/modules/drivers:/usr/local/nvidia/lib64/xorg/modules/extensions:/usr/local/cuda/lib64:/usr/lib64/haswell:/usr/lib64/dri:/usr/lib64:/usr/lib:/aot/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/aot/intel/oneapi/compiler/latest/linux/lib:/aot/intel/oneapi/mkl/latest/lib/intel64:/aot/intel/oneapi/tbb/latest/lib/intel64/gcc4.8:/usr/share:/usr/lib64/wine:/usr/local/nvidia/lib32:/usr/local/nvidia/lib32/vdpau:/usr/lib32:/usr/lib32/wine"
 export LIBRARY_PATH="/usr/local/nvidia/lib64:/usr/local/nvidia/lib64/gbm:/usr/local/nvidia/lib64/vdpau:/usr/local/nvidia/lib64/xorg/modules/drivers:/usr/local/nvidia/lib64/xorg/modules/extensions:/usr/local/cuda/lib64:/usr/lib64/haswell:/usr/lib64/dri:/usr/lib64:/usr/lib:/aot/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/aot/intel/oneapi/compiler/latest/linux/lib:/aot/intel/oneapi/mkl/latest/lib/intel64:/aot/intel/oneapi/tbb/latest/lib/intel64/gcc4.8:/usr/share:/usr/lib64/wine:/usr/local/nvidia/lib32:/usr/local/nvidia/lib32/vdpau:/usr/lib32:/usr/lib32/wine"
@@ -222,12 +273,12 @@ export FCFLAGS="${FCFLAGS_USE}"
 export LDFLAGS="${LDFLAGS_USE}"
 export ASMFLAGS="${ASMFLAGS_USE}"
 export LIBS="${LIBS_USE}"
-make  %{?_smp_mflags}  linux-readline MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${CFLAGS}" MYLIBS="-lncurses -lm"  V=1 VERBOSE=1
+make  %{?_smp_mflags}  linux-readline MYCFLAGS="${CFLAGS} -fPIC -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1 -fno-strict-aliasing" MYLDFLAGS="${LDFLAGS} -fno-strict-aliasing" MYLIBS="-Wl,--whole-archive,--as-needed,--allow-multiple-definition,/usr/lib64/libncurses.a,/usr/lib64/libtinfow.a,-lpthread,-ldl,-lm,-lmvec,--no-whole-archive" VERBOSE=1  V=1 VERBOSE=1
 fi
 
 
 %install
-export SOURCE_DATE_EPOCH=1642584897
+export SOURCE_DATE_EPOCH=1642588320
 rm -rf %{buildroot}
 export GCC_IGNORE_WERROR=1
 ## altflags_pgo content
@@ -312,3 +363,32 @@ export LIBS="${LIBS_USE}"
 
 %files
 %defattr(-,root,root,-)
+
+%files bin
+%defattr(-,root,root,-)
+/usr/bin/lua
+/usr/bin/luac
+
+%files dev
+%defattr(-,root,root,-)
+/usr/include/lauxlib.h
+/usr/include/lua.h
+/usr/include/lua.hpp
+/usr/include/luaconf.h
+/usr/include/lualib.h
+/usr/lib64/liblua.so
+/usr/lib64/pkgconfig/lua.pc
+
+%files lib
+%defattr(-,root,root,-)
+/usr/lib64/liblua.so.5.4
+/usr/lib64/liblua.so.5.4.4
+
+%files man
+%defattr(0644,root,root,0755)
+/usr/share/man/man1/lua.1
+/usr/share/man/man1/luac.1
+
+%files staticdev
+%defattr(-,root,root,-)
+/usr/lib64/liblua.a

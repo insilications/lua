@@ -1,1 +1,1 @@
-linux-readline MYCFLAGS="${CFLAGS} -fpic -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" MYLDFLAGS="${CFLAGS}" MYLIBS="-lncurses -lm"
+linux-readline MYCFLAGS="${CFLAGS} -fPIC -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1 -fno-strict-aliasing" MYLDFLAGS="${LDFLAGS} -fno-strict-aliasing" MYLIBS="-Wl,--whole-archive,--as-needed,--allow-multiple-definition,/usr/lib64/libncurses.a,/usr/lib64/libtinfow.a,-lpthread,-ldl,-lm,-lmvec,--no-whole-archive" VERBOSE=1
