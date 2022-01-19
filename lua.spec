@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : lua
 Version  : 5.4.4
-Release  : 306
+Release  : 307
 URL      : file:///aot/build/clearlinux/packages/lua/lua-v5.4.4.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/lua/lua-v5.4.4.tar.gz
 Summary  : An Extensible Extension Language
@@ -166,7 +166,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1642588320
+export SOURCE_DATE_EPOCH=1642588777
 export GCC_IGNORE_WERROR=1
 ## altflags_pgo content
 ## pgo generate
@@ -278,7 +278,7 @@ fi
 
 
 %install
-export SOURCE_DATE_EPOCH=1642588320
+export SOURCE_DATE_EPOCH=1642588777
 rm -rf %{buildroot}
 export GCC_IGNORE_WERROR=1
 ## altflags_pgo content
