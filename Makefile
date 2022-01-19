@@ -1,5 +1,6 @@
 PKG_NAME := lua
-URL = https://www.lua.org/ftp/lua-5.4.3.tar.gz
+URL = /insilications/build/git-clr/lua-clr/
 ARCHIVES = 
+ARCHIVES_GIT = 
 
 include ../common/Makefile.common

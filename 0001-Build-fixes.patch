@@ -36,7 +36,7 @@ index 36447a0..650456e 100644
  INSTALL_CMOD= $(INSTALL_TOP)/lib/lua/$V
 +INSTALL_PC= $(INSTALL_LIB)/pkgconfig
 +PC_IN=lua.pc.in
- 
+
  # How to install. If your install program does not support "-p", then
  # you may have to run ranlib on the installed liblua.a.
 @@ -41,8 +44,9 @@ PLATS= guess aix bsd c89 freebsd generic linux linux-readline macosx mingw posix
@@ -47,18 +47,18 @@ index 36447a0..650456e 100644
 +TO_LIB= liblua.a liblua.so.$(R)
  TO_MAN= lua.1 luac.1
 +TO_PC= lua.pc
- 
+
  # Lua version and release.
  V= 5.4
 @@ -51,21 +55,25 @@ R= $V.2
  # Targets start here.
  all:	$(PLAT)
- 
+
 -$(PLATS) help test clean:
 -	@cd src && $(MAKE) $@
 +$(PLATS) help test clean: pc
 +	cd src && $(MAKE) $@ V=$(V) R=$(R)
- 
+
  install: dummy
 -	cd src && $(MKDIR) $(INSTALL_BIN) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_MAN) $(INSTALL_LMOD) $(INSTALL_CMOD)
 +	cd src && $(MKDIR) $(INSTALL_BIN) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_MAN) $(INSTALL_LMOD) $(INSTALL_CMOD) $(INSTALL_PC)
@@ -69,14 +69,14 @@ index 36447a0..650456e 100644
 +	ln -sf liblua.so.$(R) liblua.so
  	cd doc && $(INSTALL_DATA) $(TO_MAN) $(INSTALL_MAN)
 +	cd src && $(INSTALL_DATA) $(TO_PC)  $(INSTALL_PC)
- 
+
  uninstall:
  	cd src && cd $(INSTALL_BIN) && $(RM) $(TO_BIN)
  	cd src && cd $(INSTALL_INC) && $(RM) $(TO_INC)
  	cd src && cd $(INSTALL_LIB) && $(RM) $(TO_LIB)
  	cd doc && cd $(INSTALL_MAN) && $(RM) $(TO_MAN)
 +	cd src && cd $(INSTALL_PC) && $(RM) $(TO_PC)
- 
+
  local:
  	$(MAKE) install INSTALL_TOP=../install
 @@ -92,13 +100,13 @@ echo:
@@ -84,7 +84,7 @@ index 36447a0..650456e 100644
  	@echo "INSTALL_EXEC= $(INSTALL_EXEC)"
  	@echo "INSTALL_DATA= $(INSTALL_DATA)"
 +	@echo "INSTALL_PC= $(INSTALL_PC)"
- 
+
  # Echo pkg-config data.
  pc:
 -	@echo "version=$R"
@@ -94,7 +94,7 @@ index 36447a0..650456e 100644
 +	sed s%##INSTALL_TOP##%$(INSTALL_TOP)% src/$(PC_IN) > src/$(TO_PC) && \
 +	sed -i s%##INSTALL_LIB##%$(INSTALL_LIB)% src/$(TO_PC) && \
 +	sed -i s%##R##%$(R)% src/$(TO_PC)
- 
+
  # Targets that do not create files (not all makes understand .PHONY).
  .PHONY: all $(PLATS) help test clean install uninstall local dummy echo pc
 diff --git a/src/Makefile b/src/Makefile
@@ -103,7 +103,7 @@ index a99735a..26b44db 100644
 +++ b/src/Makefile
 @@ -33,6 +33,7 @@ CMCFLAGS=
  PLATS= guess aix bsd c89 freebsd generic linux linux-readline macosx mingw posix solaris
- 
+
  LUA_A=	liblua.a
 +LUA_SO= liblua.so
  CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o
@@ -111,23 +111,23 @@ index a99735a..26b44db 100644
  BASE_O= $(CORE_O) $(LIB_O) $(MYOBJS)
 @@ -44,7 +45,7 @@ LUAC_T=	luac
  LUAC_O=	luac.o
- 
+
  ALL_O= $(BASE_O) $(LUA_O) $(LUAC_O)
 -ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T)
 +ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T) $(LUA_SO)
  ALL_A= $(LUA_A)
- 
+
  # Targets start here.
 @@ -60,6 +61,9 @@ $(LUA_A): $(BASE_O)
  	$(AR) $@ $(BASE_O)
  	$(RANLIB) $@
- 
+
 +$(LUA_SO): $(CORE_O) $(LIB_O)
 +	$(CC) -shared -Wl,-soname,$(LUA_SO).$(V) -o $@.$(R) $? -ldl -lm $(MYLDFLAGS)
 +
  $(LUA_T): $(LUA_O) $(LUA_A)
  	$(CC) -o $@ $(LDFLAGS) $(LUA_O) $(LUA_A) $(LIBS)
- 
+
 diff --git a/src/lua.pc.in b/src/lua.pc.in
 new file mode 100644
 index 0000000..2c9d8c0
@@ -150,14 +150,13 @@ index d9cf18c..481d0f7 100644
 --- a/src/luaconf.h
 +++ b/src/luaconf.h
 @@ -212,7 +212,7 @@
- 
+
  #else			/* }{ */
- 
+
 -#define LUA_ROOT	"/usr/local/"
 +#define LUA_ROOT	"/usr/"
  #define LUA_LDIR	LUA_ROOT "share/lua/" LUA_VDIR "/"
  #define LUA_CDIR	LUA_ROOT "lib/lua/" LUA_VDIR "/"
- 
--- 
-2.30.1
 
+--
+2.30.1
